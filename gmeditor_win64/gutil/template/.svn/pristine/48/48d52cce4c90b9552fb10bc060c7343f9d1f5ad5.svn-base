@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<material name="glass" id="glass" type="glass">
+	<kd param="diffuse" />
+	<kr type="constfloat3" r="1" g="1" b="1"/>
+	<kt type="constfloat3" r="1" g="1" b="1"/>
+	<ioroutside type="constfloat1" value="1"/>
+	<iorinside type="constfloat1" value="1.5"/>
+</material>

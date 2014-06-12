@@ -1,0 +1,18 @@
+<scene>
+  <objects>
+    <object name="_mainm1_Object11" file="_mainm1_Object11.obj">
+      <material template="D:\glue\\gutil\template\whitematte.gmt" />
+    </object>
+    <object name="_mainm2_Object11" file="_mainm2_Object11.obj">
+      <material template="D:\glue\\gutil\template\whitematte.gmt">
+        <diffuse type="Bitmaptexture" file="D:\glue\gmeditor\scenes\max\LAMPUtexture.JPG" />
+      </material>
+    </object>
+    <object name="_mainm3_Object11" file="_mainm3_Object11.obj">
+      <material template="D:\glue\\gutil\template\whitematte.gmt" />
+    </object>
+  </objects>
+  <lights>
+    <envlight type="sky" gain="1.000000 1.000000 1.000000" dir="0.577350 0.577350 0.577350" />
+  </lights>
+</scene>

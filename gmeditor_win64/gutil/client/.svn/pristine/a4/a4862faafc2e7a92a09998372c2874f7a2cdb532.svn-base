@@ -1,0 +1,58 @@
+(
+	curID = 0
+	filehandle = createFile "F:\\gmeditor\\build\\bin\\Release\\test.maxsps"
+
+	objname = "F:\\gmeditor\\build\\bin\\Release\\test.3ds"
+	exportfile objname #noPrompt selectedOnly: false
+	
+	format "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" to:filehandle
+	format "<scene>\n"  to:filehandle
+	format "<object file=\"%\">\n"  objname to:filehandle
+
+	function dumpmat mat = (
+		format "<object>\n" to:filehandle
+		format "<material id=\"%\" type=\"matte\">\n" mat.name to:filehandle
+		format "</material>\n" to:filehandle
+		format "</object>\n" to:filehandle
+	)
+		
+	function dump obj = (
+		print (classOf(OBJ.mat) as string)
+		mat = OBJ.mat
+		if classOf(mat) != UndefinedClass do
+		(
+			--print (classOf(OBJ) as string)
+			--print OBJ.children.count
+			submatNum = getNumSubMtls mat 
+			if submatNum == 0 then(
+				--single material
+				curID += 1
+				mat.name = curID as string
+				dumpmat mat
+				--print mat.name
+			)else(
+				--multi material
+				for i in 1 to submatNum do
+				(
+					m = getSubMtl mat i
+					--print curID as string
+					curID += 1
+					m.name = curID as string
+					dumpmat m
+				)
+			)
+		)
+		
+		if classOf(OBJ) == Camera do
+		(--export camera later...
+			
+		)
+	)
+	
+	for obj in objects do(
+		dump obj
+    )
+
+	format "</object>\n</scene>\n"  to:filehandle
+)
+)

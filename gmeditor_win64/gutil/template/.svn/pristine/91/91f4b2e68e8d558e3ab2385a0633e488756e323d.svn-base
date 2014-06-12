@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<material name="whitematte" id="whitematte" type="matte">
+        <kd param="diffuse" type="constfloat3" r="0.75" g="0.75" b="0.75"/>
+</material>

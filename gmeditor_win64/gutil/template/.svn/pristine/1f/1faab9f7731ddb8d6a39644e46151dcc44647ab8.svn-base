@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<material name="whitematte" id="whitematte" type="matte">
+	<emission param="emission" keepdefault="false" type="constfloat3" r="0.75" g="0.75" b="0.75"/>
+	<bumptex param="bump" keepdefault="false" type="constfloat3" r="0.75" g="0.75" b="0.75"/>
+	<normaltex param="normal" keepdefault="false" type="constfloat3" r="0.75" g="0.75" b="0.75"/>
+    <kd param="diffuse" type="constfloat3" r="0.75" g="0.75" b="0.75"/>
+</material>

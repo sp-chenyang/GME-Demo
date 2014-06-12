@@ -1,0 +1,217 @@
+
+function start_dumpmat mat filehandle = 
+(
+	format "\t\t<object>\n" to:filehandle
+	format "\t\t\t<material id=\"%\" type=\"matte\">\n" mat.name to:filehandle
+)
+
+fn dumptex mapName mapType mapPath filehandle =
+(
+	format "\t\t\t\t<% type=\"%\" file=\"%\" />\n" mapName mapType mapPath to:filehandle
+)	
+
+function end_dumpmat mat filehandle = 
+(
+	format "\t\t\t</material>\n" to:filehandle
+	format "\t\t</object>\n" to:filehandle
+)
+
+fn dumptex theMat filehandle = 
+(
+-- 	mapName = ""
+-- 	mapType = ""
+-- 	mapPath = ""
+	map_info = #()
+	if (classof theMat) == Standardmaterial do
+	(
+		if theMat.shaderType == 1 do
+		(
+			maps = theMat.maps 
+			for i=1 to maps.count do
+			( 
+				if maps[i] != undefined do
+				(
+					case i of 
+					(
+						1:
+						(
+							append map_info =  "AmbientMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 							onAddMaps materialNode "AmbientMap" (classof maps[i]) maps[i].fileName
+						)
+						2:
+						(
+							append map_info = "diffuse"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "diffuse" (classof maps[i]) maps[i].fileName
+						)
+						3:
+						(							
+							append map_info =  "SpecularMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "SpecularMap" (classof maps[i]) maps[i].fileName
+						)
+						4:
+						(
+							append map_info =  "SpecularLevelMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "SpecularLevelMap" (classof maps[i]) maps[i].fileName
+						)
+						5:
+						(
+							append map_info =  "GlossinessMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "GlossinessMap" (classof maps[i]) maps[i].fileName
+						)
+						6:
+						(
+							append map_info =   "SelfIllumMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "SelfIllumMap" (classof maps[i]) maps[i].fileName
+						)
+						7:
+						(
+							append map_info =  "OpacityMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "OpacityMap" (classof maps[i]) maps[i].fileName
+						)
+						8:
+						(
+							append map_info =  "FilterMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "FilterMap" (classof maps[i]) maps[i].fileName
+						)
+						9:
+						(
+							append map_info =  "BumpMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "BumpMap" (classof maps[i]) maps[i].fileName
+						)
+						10:
+						(
+							append map_info =  "ReflectionMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "ReflectionMap" (classof maps[i]) maps[i].fileName
+						)
+						11:
+						(
+							append map_info "RefractionMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "RefractionMap" (classof maps[i]) maps[i].fileName
+						)
+						12:
+						(
+							append map_info  "DisplacementMap"
+							append map_info (classof maps[i])
+							append map_info maps[i].fileName
+							dumptex mapName mapType mapPath filehandle
+-- 								onAddMaps materialNode "DisplacementMap" (classof maps[i]) maps[i].fileName
+						)
+						default:""
+					) -- end case of 
+				)-- maps[i] != undefined
+			) -- end maps loop
+		) -- end heMat.shaderType == 1  -- blinn 
+	) -- end if Standardmaterial
+
+-- 	cunMatTexList
+	map_info
+)
+
+
+fn output_mesh_mat_tex_info =
+(
+	curID = 0
+	filehandle = createFile "D:\\test.maxsps"   --"F:\\gmeditor\\build\\bin\\Release\\test.maxsps"
+
+	objname = "D:\\test.3ds"    --"F:\\gmeditor\\build\\bin\\Release\\test.3ds"
+	exportfile objname #noPrompt selectedOnly: false
+	
+	format "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" to:filehandle
+	format "<scene>\n"  to:filehandle
+	format "\t<object file=\"%\">\n"  objname to:filehandle
+	
+
+	function dump obj curID filehandle = 
+	(
+		print (classOf(obj.mat) as string)
+		mat = obj.mat
+		if classOf(mat) != UndefinedClass do
+		(
+			--print (classOf(OBJ) as string)
+			--print OBJ.children.count
+			submatNum = getNumSubMtls mat 
+			if submatNum == 0 then(
+				--single material
+				curID += 1
+				mat.name = curID as string
+				
+				-- start dumpmat  
+				start_dumpmat mat filehandle
+				
+				-- start & end dumptex
+				
+-- 				dumptex mat filehandle
+				
+				-- end dumpmat
+				end_dumpmat mat filehandle
+				
+			)else(
+				--multi material
+				for i in 1 to submatNum do
+				(
+					m = getSubMtl mat i
+					--print curID as string
+					curID += 1
+					m.name = curID as string
+					
+					-- start dumpmat  
+					start_dumpmat m filehandle
+					
+					-- start & end dumptex
+-- 					dumptex m filehandle
+					
+					-- end dumpmat
+					end_dumpmat m filehandle
+				)
+			)
+		)
+		
+		if classOf(obj) == TargetCamera do
+		(--export camera later...
+			obj.pos 
+			obj.target.pos
+			obj.transform.row2
+			
+		)
+	)
+	
+	for obj in objects do(
+		dump obj curID filehandle
+    )
+
+	format "\t</object>\n</scene>\n"  to:filehandle
+)
+-- output_mesh_mat_tex_info()
